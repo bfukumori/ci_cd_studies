@@ -9,9 +9,6 @@ jobs:
   build:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20, 22]
 
     steps:
       - name: Checkout
@@ -25,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22
           cache: 'pnpm'
 
       - name: Install Dependencies
@@ -40,5 +37,14 @@ jobs:
           SHA=$(git rev-parse --short $GITHUB_SHA)
           echo "sha=$SHA" >> $GITHUB_OUTPUT
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build docker Image
-        run: docker build -t ci_cd_studies_image:${{ steps.generate_tag.outputs.sha }} .
+        run: docker build -t bfukumori/ci_cd_studies_image:${{ steps.generate_tag.outputs.sha }} .
+
+      - name: Push docker Image
+        run: docker push bfukumori/ci_cd_studies_image:${{ steps.generate_tag.outputs.sha }}
