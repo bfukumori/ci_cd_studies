@@ -43,8 +43,8 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build docker Image
-        run: docker build -t bfukumori/ci_cd_studies_image:${{ steps.generate_tag.outputs.sha }} .
-
-      - name: Push docker Image
-        run: docker push bfukumori/ci_cd_studies_image:${{ steps.generate_tag.outputs.sha }}
+      - name: Build and Push docker image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/ci_cd_studies_image:${{ steps.generate_tag.outputs.sha }},${{ vars.DOCKERHUB_USERNAME }}/ci_cd_studies_image:latest
