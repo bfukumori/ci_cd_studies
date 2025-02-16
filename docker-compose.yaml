@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - first-network
+
+  nest-api:
+    build:
+      context: .
+    container_name: nest-api
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+    networks:
+      - first-network
+
+networks:
+  first-network:
+    driver: bridge
+
+volumes:
+  db:
