@@ -33,3 +33,6 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      - name: Build docker Image
+        run: docker build -t ci_cd_studies_image .
