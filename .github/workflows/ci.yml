@@ -16,6 +16,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -41,12 +43,8 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build
-        run: pnpm build
-
       - name: Build and Push docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/ci_cd_studies_image:${{ steps.generate_tag.outputs.sha }},${{ vars.DOCKERHUB_USERNAME }}/ci_cd_studies_image:latest
