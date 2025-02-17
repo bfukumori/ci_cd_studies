@@ -31,10 +31,13 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Build
+        run: pnpm build
+
       - name: Generate tag
         id: generate_tag
         run: |
-          SHA=$(git rev-parse --short $GITHUB_SHA)
+          SHA=$(git rev-parse --short HEAD)
           echo "sha=$SHA" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
